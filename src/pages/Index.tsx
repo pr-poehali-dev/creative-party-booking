@@ -159,7 +159,7 @@ export default function Index() {
     <div className="min-h-screen bg-gradient-to-b from-background to-accent/20">
       <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-border">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-primary">CreativeParty</h1>
+          <h1 className="text-2xl font-bold text-primary">Без масок и границ</h1>
           <div className="hidden md:flex gap-6">
             <a href="#events" className="hover:text-primary transition-colors">
               Мероприятия
@@ -509,7 +509,7 @@ export default function Index() {
 
       <footer className="bg-accent/20 py-8 px-4 border-t border-border">
         <div className="container mx-auto text-center text-muted-foreground">
-          <p>© 2024 CreativeParty. Все права защищены.</p>
+          <p>© 2024 Без масок и границ. Все права защищены.</p>
         </div>
       </footer>
     </div>
