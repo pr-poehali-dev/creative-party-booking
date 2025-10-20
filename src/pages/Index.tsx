@@ -4,8 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Calendar } from '@/components/ui/calendar';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale';
 
 const events = [
   {
@@ -83,6 +86,7 @@ const gallery = [
 
 export default function Index() {
   const { toast } = useToast();
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -91,13 +95,51 @@ export default function Index() {
     message: '',
   });
 
+  const getAvailableDates = () => {
+    const today = new Date();
+    const unavailableDates = [
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2),
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() + 5),
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() + 12),
+    ];
+    return unavailableDates;
+  };
+
+  const isDateDisabled = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) return true;
+    
+    const unavailableDates = getAvailableDates();
+    return unavailableDates.some(
+      (unavailableDate) =>
+        unavailableDate.toDateString() === date.toDateString()
+    );
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setSelectedDate(date);
+    if (date) {
+      setFormData({ ...formData, date: format(date, 'yyyy-MM-dd') });
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedDate) {
+      toast({
+        title: 'Выберите дату',
+        description: 'Пожалуйста, выберите дату мероприятия в календаре.',
+        variant: 'destructive',
+      });
+      return;
+    }
     toast({
       title: 'Заявка отправлена! 🎉',
       description: 'Мы свяжемся с вами в ближайшее время.',
     });
     setFormData({ name: '', phone: '', date: '', guests: '', message: '' });
+    setSelectedDate(undefined);
   };
 
   return (
@@ -295,27 +337,34 @@ export default function Index() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Желаемая дата</label>
-                    <Input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                      required
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Выберите дату</label>
+                  <div className="flex justify-center p-4 bg-accent/30 rounded-lg">
+                    <Calendar
+                      mode="single"
+                      selected={selectedDate}
+                      onSelect={handleDateSelect}
+                      disabled={isDateDisabled}
+                      locale={ru}
+                      className="rounded-md border"
                     />
                   </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Количество гостей</label>
-                    <Input
-                      type="number"
-                      placeholder="6"
-                      min="1"
-                      value={formData.guests}
-                      onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                      required
-                    />
-                  </div>
+                  {selectedDate && (
+                    <p className="text-sm text-center mt-2 text-primary font-medium">
+                      Выбрана дата: {format(selectedDate, 'd MMMM yyyy', { locale: ru })}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Количество гостей</label>
+                  <Input
+                    type="number"
+                    placeholder="6"
+                    min="1"
+                    value={formData.guests}
+                    onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
+                    required
+                  />
                 </div>
                 <div>
                   <label className="text-sm font-medium mb-2 block">Комментарий</label>
