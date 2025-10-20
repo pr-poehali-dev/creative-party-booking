@@ -466,6 +466,9 @@ export default function Index() {
       <section id="contacts" className="py-20 px-4">
         <div className="container mx-auto max-w-4xl">
           <h2 className="text-4xl font-bold text-center mb-4">Контакты</h2>
+          <div className="text-center mb-8">
+            <p className="text-2xl font-semibold text-primary">Арина</p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             <Card className="text-center">
               <CardHeader>
@@ -475,7 +478,7 @@ export default function Index() {
                 <CardTitle>Адрес</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">г. Москва, ул. Творческая, 15</p>
+                <p className="text-muted-foreground">г. Екатеринбург</p>
               </CardContent>
             </Card>
             <Card className="text-center">
@@ -486,7 +489,7 @@ export default function Index() {
                 <CardTitle>Телефон</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">+7 (999) 123-45-67</p>
+                <a href="tel:+79833516391" className="text-muted-foreground hover:text-primary transition-colors">+7 (983) 351-63-91</a>
               </CardContent>
             </Card>
             <Card className="text-center">
@@ -497,7 +500,7 @@ export default function Index() {
                 <CardTitle>Email</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">hello@creativeparty.ru</p>
+                <a href="mailto:ar1nashapov@yandex.ru" className="text-muted-foreground hover:text-primary transition-colors break-all">ar1nashapov@yandex.ru</a>
               </CardContent>
             </Card>
           </div>
