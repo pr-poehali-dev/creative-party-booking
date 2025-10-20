@@ -14,31 +14,27 @@ import { ru } from 'date-fns/locale';
 const events = [
   {
     id: 1,
-    title: 'Живопись & Вино',
-    description: 'Раскройте свой творческий потенциал за бокалом вина',
-    duration: '3 часа',
-    icon: 'Palette',
+    title: 'Изделия из гипса',
+    description: 'Создайте уникальные декоративные изделия из гипса своими руками',
+    duration: '2 часа',
+    price: '1 990 ₽',
+    icon: 'Box',
   },
   {
     id: 2,
-    title: 'Керамика',
-    description: 'Создайте уникальную керамическую посуду своими руками',
-    duration: '2.5 часа',
-    icon: 'Cookie',
+    title: 'Карта желаний',
+    description: 'Визуализируйте свои мечты и цели на красивой карте желаний',
+    duration: '3 часа',
+    price: '2 590 ₽',
+    icon: 'Heart',
   },
   {
     id: 3,
-    title: 'Флористика',
-    description: 'Соберите стильный букет или цветочную композицию',
+    title: 'Картина-аффирмация',
+    description: 'Нарисуйте вдохновляющую картину с позитивными аффирмациями',
     duration: '2 часа',
-    icon: 'Flower',
-  },
-  {
-    id: 4,
-    title: 'Свечи & Ароматы',
-    description: 'Создайте ароматические свечи с индивидуальным дизайном',
-    duration: '2 часа',
-    icon: 'Sparkles',
+    price: '2 590 ₽',
+    icon: 'Palette',
   },
 ];
 
@@ -252,12 +248,21 @@ export default function Index() {
                             rows={3}
                           />
                         </div>
-                        <div>
-                          <label className="text-sm font-medium mb-2 block">Длительность</label>
-                          <Input
-                            value={editingEvent.duration}
-                            onChange={(e) => setEditingEvent({ ...editingEvent, duration: e.target.value })}
-                          />
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Длительность</label>
+                            <Input
+                              value={editingEvent.duration}
+                              onChange={(e) => setEditingEvent({ ...editingEvent, duration: e.target.value })}
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Цена</label>
+                            <Input
+                              value={editingEvent.price}
+                              onChange={(e) => setEditingEvent({ ...editingEvent, price: e.target.value })}
+                            />
+                          </div>
                         </div>
                         <Button onClick={handleSaveEvent} className="w-full">
                           <Icon name="Check" className="mr-2" size={16} />
@@ -275,9 +280,15 @@ export default function Index() {
                   <CardDescription>{event.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Icon name="Clock" size={16} className="mr-2" />
-                    {event.duration}
+                  <div className="space-y-2">
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <Icon name="Clock" size={16} className="mr-2" />
+                      {event.duration}
+                    </div>
+                    <div className="flex items-center text-lg font-semibold text-primary">
+                      <Icon name="Tag" size={16} className="mr-2" />
+                      {event.price}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
