@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import Icon from '@/components/ui/icon';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
@@ -87,6 +88,8 @@ const gallery = [
 export default function Index() {
   const { toast } = useToast();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [editingEvent, setEditingEvent] = useState<any>(null);
+  const [eventsList, setEventsList] = useState(events);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -94,6 +97,20 @@ export default function Index() {
     guests: '',
     message: '',
   });
+
+  const handleEditEvent = (event: any) => {
+    setEditingEvent({ ...event });
+  };
+
+  const handleSaveEvent = () => {
+    if (!editingEvent) return;
+    setEventsList(eventsList.map(e => e.id === editingEvent.id ? editingEvent : e));
+    toast({
+      title: 'Изменения сохранены! ✅',
+      description: 'Программа успешно обновлена.',
+    });
+    setEditingEvent(null);
+  };
 
   const getAvailableDates = () => {
     const today = new Date();
@@ -172,7 +189,7 @@ export default function Index() {
 
       <section className="pt-32 pb-20 px-4 animate-fade-in">
         <div className="container mx-auto text-center max-w-4xl">
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-primary">
             Незабываемые творческие девичники
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -198,8 +215,58 @@ export default function Index() {
             Выберите формат, который вам по душе, или создайте свою уникальную программу
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {events.map((event, index) => (
-              <Card key={event.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-scale-in" style={{ animationDelay: `${index * 100}ms` }}>
+            {eventsList.map((event, index) => (
+              <Card key={event.id} className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-scale-in relative group" style={{ animationDelay: `${index * 100}ms` }}>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      onClick={() => handleEditEvent(event)}
+                    >
+                      <Icon name="Pencil" size={16} />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                      <DialogTitle>Редактировать программу</DialogTitle>
+                      <DialogDescription>
+                        Измените детали мероприятия
+                      </DialogDescription>
+                    </DialogHeader>
+                    {editingEvent && editingEvent.id === event.id && (
+                      <div className="space-y-4 py-4">
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">Название</label>
+                          <Input
+                            value={editingEvent.title}
+                            onChange={(e) => setEditingEvent({ ...editingEvent, title: e.target.value })}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">Описание</label>
+                          <Textarea
+                            value={editingEvent.description}
+                            onChange={(e) => setEditingEvent({ ...editingEvent, description: e.target.value })}
+                            rows={3}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium mb-2 block">Длительность</label>
+                          <Input
+                            value={editingEvent.duration}
+                            onChange={(e) => setEditingEvent({ ...editingEvent, duration: e.target.value })}
+                          />
+                        </div>
+                        <Button onClick={handleSaveEvent} className="w-full">
+                          <Icon name="Check" className="mr-2" size={16} />
+                          Сохранить изменения
+                        </Button>
+                      </div>
+                    )}
+                  </DialogContent>
+                </Dialog>
                 <CardHeader>
                   <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                     <Icon name={event.icon as any} className="text-primary" size={24} />
